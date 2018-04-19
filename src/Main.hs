@@ -8,6 +8,12 @@ import qualified Data.Text.IO as T
 import Data.Map as Map
 import Control.Applicative
 
+--start snippet EitherIO
+data EitherIO e a = EitherIO {
+    runEitherIO :: IO (Either e a)
+}
+--end snippet EitherIO
+
 -- start snippet LoginError
 data LoginError = InvalidEmail
                 | NoSuchUser
