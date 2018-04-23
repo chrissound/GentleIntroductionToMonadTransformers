@@ -14,6 +14,25 @@ data EitherIO e a = EitherIO {
 }
 --end snippet EitherIO
 
+--start snippet EitherIOFunctor
+instance Functor (EitherIO e) where
+  fmap f ex = wrapped
+    where
+      unwrapped = runEitherIO ex
+      fmapped   = fmap (fmap f) unwrapped
+      wrapped   = EitherIO fmapped
+--end snippet EitherIOFunctor
+
+--start snippet EitherIOApMon
+instance Applicative (EitherIO e) where
+  pure    = EitherIO . return . Right
+  f <*> x = EitherIO $ liftA2 (<*>) (runEitherIO f) (runEitherIO x)
+
+instance Monad (EitherIO e) where
+  return  = pure
+  x >>= f = EitherIO $ runEitherIO x >>= either (return . Left) (runEitherIO . f)
+--end snippet EitherIOApMon
+
 -- start snippet LoginError
 data LoginError = InvalidEmail
                 | NoSuchUser
