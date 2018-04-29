@@ -63,11 +63,11 @@ printResult = T.putStrLn . either
 -- end snippet printResult
 
 -- start snippet getToken
-getToken :: IO (Either LoginError Text)
+getToken :: EitherIO LoginError Text
 getToken = do
-  T.putStrLn "Enter email address:"
-  email <- T.getLine
-  return (getDomain email)
+  EitherIO (fmap Right (T.putStrLn "Enter email address:"))
+  input <- EitherIO (fmap Right T.getLine)
+  EitherIO (return (getDomain input))
 -- end snippet printResult
 
 -- start snippet users
